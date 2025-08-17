@@ -7,7 +7,11 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: ['http://localhost:3002', 'http://127.0.0.1:3002'],
+    origin: [
+      'http://localhost:3002',
+      'http://127.0.0.1:3002',
+      'https://final-project-fe-vickymahfudy-production.up.railway.app',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
