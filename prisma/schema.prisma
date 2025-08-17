@@ -1,0 +1,283 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  TEAM_LEAD
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      UserRole @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  enrollments Enrollment[]
+  submissions Submission[]
+
+  @@map("users")
+}
+
+enum VerticalType {
+  FULLSTACK
+}
+
+model Vertical {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  type        VerticalType
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  batches Batch[]
+
+  // Constraints and Indexes
+  @@unique([name], name: "unique_vertical_name")
+  @@index([type], name: "idx_vertical_type")
+  @@index([isActive], name: "idx_vertical_active")
+  @@map("verticals")
+}
+
+model Batch {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Foreign Keys
+  verticalId String
+
+  // Relations
+  vertical Vertical @relation(fields: [verticalId], references: [id], onDelete: Cascade)
+  modules  Module[]
+  assignments Assignment[]
+  enrollments Enrollment[]
+
+  // Constraints and Indexes
+  @@unique([name, verticalId], name: "unique_batch_name_per_vertical")
+  @@index([verticalId], name: "idx_batch_vertical")
+  @@index([isActive], name: "idx_batch_active")
+  @@map("batches")
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  moduleOrder Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Foreign Keys
+  batchId String
+
+  // Relations
+  batch Batch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  weeks Week[]
+
+  // Constraints and Indexes
+  @@unique([moduleOrder, batchId], name: "unique_module_order_per_batch")
+  @@unique([name, batchId], name: "unique_module_name_per_batch")
+  @@index([batchId], name: "idx_module_batch")
+  @@index([isActive], name: "idx_module_active")
+  @@map("modules")
+}
+
+model Week {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  weekNumber  Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Foreign Keys
+  moduleId String
+
+  // Relations
+  module   Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lectures Lecture[]
+
+  // Constraints and Indexes
+  @@unique([weekNumber, moduleId], name: "unique_week_number_per_module")
+  @@unique([name, moduleId], name: "unique_week_name_per_module")
+  @@index([moduleId], name: "idx_week_module")
+  @@index([isActive], name: "idx_week_active")
+  @@map("weeks")
+}
+
+model Lecture {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  zoomLink      String?
+  deckLink      String?
+  lectureNumber Int
+  duration      Int?     // in minutes
+  scheduledAt   DateTime?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Foreign Keys
+  weekId String
+
+  // Relations
+  week Week @relation(fields: [weekId], references: [id], onDelete: Cascade)
+
+  // Constraints and Indexes
+  @@unique([lectureNumber, weekId], name: "unique_lecture_number_per_week")
+  @@unique([title, weekId], name: "unique_lecture_title_per_week")
+  @@index([weekId], name: "idx_lecture_week")
+  @@index([isActive], name: "idx_lecture_active")
+  @@index([scheduledAt], name: "idx_lecture_scheduled")
+  @@map("lectures")
+}
+
+enum AssignmentType {
+  INDIVIDUAL
+  GROUP
+  PROJECT
+  QUIZ
+  EXAM
+}
+
+enum AssignmentStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+  ARCHIVED
+}
+
+model Assignment {
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  type        AssignmentType    @default(INDIVIDUAL)
+  status      AssignmentStatus  @default(DRAFT)
+  maxScore    Int?
+  dueDate     DateTime?
+  publishedAt DateTime?
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Foreign Key - Hubungan langsung dengan Batch
+  batchId     String
+
+  // Relations
+  batch       Batch             @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+
+  // Constraints dan Indexes
+  @@unique([title, batchId], name: "unique_assignment_title_per_batch")
+  @@index([batchId], name: "idx_assignment_batch")
+  @@index([type], name: "idx_assignment_type")
+  @@index([status], name: "idx_assignment_status")
+  @@index([dueDate], name: "idx_assignment_due_date")
+  @@index([isActive], name: "idx_assignment_active")
+  @@map("assignments")
+}
+
+enum SubmissionType {
+  FILE
+  LINK
+}
+
+model Submission {
+  id           String         @id @default(cuid())
+  type         SubmissionType
+  fileUrl      String?
+  fileName     String?
+  fileSize     Int?
+  linkUrl      String?
+  linkTitle    String?
+  content      String?
+  score        Float?
+  feedback     String?
+  submittedAt  DateTime       @default(now())
+  gradedAt     DateTime?
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  // Foreign Keys
+  userId       String
+  assignmentId String
+
+  // Relations
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignment   Assignment     @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  // Constraints and Indexes
+  @@unique([userId, assignmentId], name: "unique_user_assignment_submission")
+  @@index([userId], name: "idx_submission_user")
+  @@index([assignmentId], name: "idx_submission_assignment")
+  @@index([type], name: "idx_submission_type")
+  @@index([submittedAt], name: "idx_submission_submitted_at")
+  @@index([isActive], name: "idx_submission_active")
+  @@map("submissions")
+}
+
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  COMPLETED
+  DROPPED
+}
+
+model Enrollment {
+  id        String           @id @default(cuid())
+  status    EnrollmentStatus @default(PENDING)
+  enrolledAt DateTime        @default(now())
+  approvedAt DateTime?
+  completedAt DateTime?
+  isActive  Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Foreign Keys
+  userId  String
+  batchId String
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  batch Batch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  // Constraints and Indexes
+  @@unique([userId, batchId], name: "unique_user_batch_enrollment")
+  @@index([userId], name: "idx_enrollment_user")
+  @@index([batchId], name: "idx_enrollment_batch")
+  @@index([status], name: "idx_enrollment_status")
+  @@index([isActive], name: "idx_enrollment_active")
+  @@map("enrollments")
+}
