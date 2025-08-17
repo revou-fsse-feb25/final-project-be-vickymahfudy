@@ -99,122 +99,6 @@ prisma/
 └── seed.ts                    # Database seeding script
 ```
 
-## 🗄️ Database Schema
-
-### Core Entities
-
-#### User Management
-
-- **User**: Core user entity with roles (STUDENT, TEAM_LEAD, ADMIN)
-- **UserRole**: Enum defining user permission levels
-
-#### Educational Structure
-
-- **Vertical**: Top-level program categories (e.g., FULLSTACK)
-- **Batch**: Cohorts within verticals with start/end dates
-- **Module**: Course modules within batches
-- **Week**: Weekly content organization within modules
-- **Lecture**: Individual lecture sessions with scheduling
-
-#### Assignment System
-
-- **Assignment**: Assignments with types (INDIVIDUAL, GROUP, PROJECT, QUIZ, EXAM)
-- **AssignmentStatus**: Status tracking (DRAFT, PUBLISHED, CLOSED, ARCHIVED)
-- **Submission**: Student submissions with file/link support
-- **SubmissionType**: Submission format (FILE, LINK)
-
-#### Enrollment Management
-
-- **Enrollment**: Student-batch relationships with approval workflow
-- **EnrollmentStatus**: Status tracking (PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED, DROPPED)
-
-### Key Relationships
-
-- Hierarchical structure: Vertical → Batch → Module → Week → Lecture
-- Assignment-Batch direct relationship for flexible assignment management
-- User-Enrollment-Batch many-to-many relationship
-- User-Assignment-Submission tracking for submissions
-
-## 🚦 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL 12+
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd final-project-be-vickymahfudy
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Environment Configuration**
-
-   Create a `.env` file in the root directory:
-
-   ```env
-   # Database
-   DATABASE_URL="postgresql://username:password@localhost:5432/revou_lms?schema=public"
-
-   # JWT Configuration
-   JWT_SECRET="your-super-secret-jwt-key-here"
-   JWT_EXPIRES_IN="7d"
-
-   # Application
-   PORT=3001
-   NODE_ENV="development"
-   ```
-
-4. **Database Setup**
-
-   ```bash
-   # Generate Prisma client
-   npx prisma generate
-
-   # Run database migrations
-   npx prisma migrate deploy
-
-   # Seed the database with sample data
-   npm run db:seed
-   ```
-
-5. **Start the development server**
-
-   ```bash
-   npm run start:dev
-   ```
-
-   The API will be available at `http://localhost:3001`
-
-   Swagger documentation: `http://localhost:3001/api`
-
-## 📜 Available Scripts
-
-| Script                | Description                              |
-| --------------------- | ---------------------------------------- |
-| `npm run start`       | Start the production server              |
-| `npm run start:dev`   | Start development server with hot reload |
-| `npm run start:debug` | Start server in debug mode               |
-| `npm run start:prod`  | Start production server from dist        |
-| `npm run build`       | Build the application for production     |
-| `npm run lint`        | Run ESLint for code quality              |
-| `npm run format`      | Format code with Prettier                |
-| `npm run test`        | Run unit tests                           |
-| `npm run test:watch`  | Run tests in watch mode                  |
-| `npm run test:cov`    | Run tests with coverage report           |
-| `npm run test:e2e`    | Run end-to-end tests                     |
-| `npm run db:seed`     | Seed database with sample data           |
-
 ## 🔐 Authentication & Authorization
 
 ### Authentication Flow
@@ -303,6 +187,8 @@ prisma/
 - `GET /enrollments/batch/:batchId` - Get batch enrollments
 
 ## 📊 Comprehensive Data Model
+
+![ERD](https://github.com/user-attachments/assets/15471a1f-2006-492b-8934-a86e9c57e6c9)
 
 ### Database Schema Overview
 
@@ -902,33 +788,68 @@ The application is configured to accept requests from:
 - **Features**: Interactive API testing, comprehensive documentation
 - **Persistence**: Authorization tokens persist across browser sessions
 
-## 🧪 Testing
+## 🚦 Getting Started
 
-### Unit Testing
+### Prerequisites
 
-```bash
-# Run all tests
-npm run test
+- Node.js 18+
+- PostgreSQL 12+
+- npm or yarn
 
-# Run tests in watch mode
-npm run test:watch
+### Installation
 
-# Generate coverage report
-npm run test:cov
-```
+1. **Clone the repository**
 
-### End-to-End Testing
+   ```bash
+   git clone <repository-url>
+   cd final-project-be-vickymahfudy
+   ```
 
-```bash
-# Run E2E tests
-npm run test:e2e
-```
+2. **Install dependencies**
 
-### Test Structure
+   ```bash
+   npm install
+   ```
 
-- **Unit Tests**: Service and controller testing with mocked dependencies
-- **Integration Tests**: Database integration testing with test database
-- **E2E Tests**: Full application flow testing with Supertest
+3. **Environment Configuration**
+
+   Create a `.env` file in the root directory:
+
+   ```env
+   # Database
+   DATABASE_URL="postgresql://username:password@localhost:5432/revou_lms?schema=public"
+
+   # JWT Configuration
+   JWT_SECRET="your-super-secret-jwt-key-here"
+   JWT_EXPIRES_IN="7d"
+
+   # Application
+   PORT=3001
+   NODE_ENV="development"
+   ```
+
+4. **Database Setup**
+
+   ```bash
+   # Generate Prisma client
+   npx prisma generate
+
+   # Run database migrations
+   npx prisma migrate deploy
+
+   # Seed the database with sample data
+   npm run db:seed
+   ```
+
+5. **Start the development server**
+
+   ```bash
+   npm run start:dev
+   ```
+
+   The API will be available at `http://localhost:3001`
+
+   Swagger documentation: `http://localhost:3001/api`
 
 ## 🚀 Deployment
 
@@ -1067,57 +988,6 @@ npm run db:seed
 }
 ```
 
-## 📈 Performance Considerations
-
-### Database Optimization
-
-- **Indexes**: Strategic indexing on frequently queried fields
-- **Relations**: Efficient join queries with Prisma
-- **Pagination**: Implemented for large data sets
-- **Connection Pooling**: PostgreSQL connection management
-
-### API Optimization
-
-- **Caching**: Response caching for static data
-- **Compression**: GZIP compression for responses
-- **Rate Limiting**: Protection against abuse
-- **Query Optimization**: Efficient database queries
-
-## 🔧 Development Guidelines
-
-### Code Style
-
-- **TypeScript**: Strict type checking enabled
-- **ESLint**: Consistent code formatting
-- **Prettier**: Automated code formatting
-- **Naming Conventions**: PascalCase for classes, camelCase for methods
-
-### Best Practices
-
-1. **Modular Architecture**: Feature-based module organization
-2. **Dependency Injection**: NestJS DI container usage
-3. **DTO Validation**: Input validation with class-validator
-4. **Error Handling**: Consistent error responses
-5. **Documentation**: Comprehensive Swagger documentation
-6. **Testing**: Unit and integration test coverage
-7. **Security**: JWT authentication and role-based authorization
-
-### Adding New Features
-
-1. **Create Module**: Generate new NestJS module
-
-   ```bash
-   nest generate module feature-name
-   nest generate controller feature-name
-   nest generate service feature-name
-   ```
-
-2. **Define DTOs**: Create validation DTOs in `dto/` folder
-3. **Update Database**: Add Prisma schema changes and migrate
-4. **Implement Logic**: Add business logic in service layer
-5. **Add Tests**: Write unit and integration tests
-6. **Document API**: Add Swagger decorators
-
 ## 🤝 Contributing
 
 1. **Fork the repository**
@@ -1129,35 +999,9 @@ npm run db:seed
 7. **Push to branch**: `git push origin feature/new-feature`
 8. **Submit Pull Request**: Include description and testing notes
 
-### Commit Convention
-
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation updates
-- `style:` Code style changes
-- `refactor:` Code refactoring
-- `test:` Test additions or updates
-- `chore:` Build process or auxiliary tool changes
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For support and questions:
-
-1. **API Documentation**: Visit `/api` endpoint for interactive docs
-2. **GitHub Issues**: Submit issues with detailed reproduction steps
-3. **Development Team**: Contact the development team for urgent matters
-
-## 📚 Additional Resources
-
-- [NestJS Documentation](https://docs.nestjs.com/)
-- [Prisma Documentation](https://www.prisma.io/docs/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [JWT.io](https://jwt.io/) - JWT token debugging
-- [Swagger/OpenAPI](https://swagger.io/docs/) - API documentation
 
 ---
 
