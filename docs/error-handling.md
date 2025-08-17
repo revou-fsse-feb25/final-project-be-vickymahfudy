@@ -29,15 +29,18 @@ All API errors follow a consistent JSON response structure:
 ## HTTP Status Codes
 
 ### 400 - Bad Request
+
 Returned when the request is malformed or contains invalid data.
 
 **Common scenarios:**
+
 - Invalid request body format
 - Missing required fields
 - Invalid data types
 - Business logic validation failures
 
 **Example:**
+
 ```json
 {
   "statusCode": 400,
@@ -49,14 +52,17 @@ Returned when the request is malformed or contains invalid data.
 ```
 
 ### 401 - Unauthorized
+
 Returned when authentication is required but not provided or invalid.
 
 **Common scenarios:**
+
 - Missing JWT token
 - Invalid or expired JWT token
 - Malformed Authorization header
 
 **Example:**
+
 ```json
 {
   "statusCode": 401,
@@ -68,14 +74,17 @@ Returned when authentication is required but not provided or invalid.
 ```
 
 ### 403 - Forbidden
+
 Returned when the user is authenticated but lacks permission for the requested resource.
 
 **Common scenarios:**
+
 - Student trying to access admin-only endpoints
 - User not enrolled in the required batch
 - Insufficient role permissions
 
 **Example:**
+
 ```json
 {
   "statusCode": 403,
@@ -87,14 +96,17 @@ Returned when the user is authenticated but lacks permission for the requested r
 ```
 
 ### 404 - Not Found
+
 Returned when the requested resource does not exist.
 
 **Common scenarios:**
+
 - Invalid resource ID
 - Resource has been deleted
 - Incorrect endpoint URL
 
 **Example:**
+
 ```json
 {
   "statusCode": 404,
@@ -106,14 +118,17 @@ Returned when the requested resource does not exist.
 ```
 
 ### 409 - Conflict
+
 Returned when the request conflicts with the current state of the resource.
 
 **Common scenarios:**
+
 - Duplicate email registration
 - Unique constraint violations
 - Resource already exists
 
 **Example:**
+
 ```json
 {
   "statusCode": 409,
@@ -125,14 +140,17 @@ Returned when the request conflicts with the current state of the resource.
 ```
 
 ### 422 - Unprocessable Entity
+
 Returned when the request is well-formed but contains semantic errors.
 
 **Common scenarios:**
+
 - Business rule violations
 - Invalid state transitions
 - Complex validation failures
 
 **Example:**
+
 ```json
 {
   "statusCode": 422,
@@ -144,14 +162,17 @@ Returned when the request is well-formed but contains semantic errors.
 ```
 
 ### 500 - Internal Server Error
+
 Returned when an unexpected server error occurs.
 
 **Common scenarios:**
+
 - Database connection failures
 - Unhandled exceptions
 - Third-party service failures
 
 **Example:**
+
 ```json
 {
   "statusCode": 500,
@@ -248,6 +269,7 @@ The application logs errors at different levels:
 - **Unhandled exceptions**: Logged as errors with full stack traces
 
 This logging strategy helps with:
+
 - Debugging application issues
 - Monitoring API health
 - Identifying common error patterns

@@ -26,14 +26,14 @@ interface JwtPayload {
 
 /**
  * Enrollment Access Guard
- * 
+ *
  * This guard verifies that a user has access to specific batch content
  * by checking their enrollment status. It ensures that only enrolled
  * students can access batch-specific resources like lectures, assignments, etc.
- * 
+ *
  * Note: This guard assumes JWT authentication has already been performed
  * and user information is available in the request object.
- * 
+ *
  * @example
  * ```typescript
  * @UseGuards(JwtGuard, EnrollmentGuard)
@@ -42,7 +42,7 @@ interface JwtPayload {
  *   // Only enrolled students can access this batch content
  * }
  * ```
- * 
+ *
  * @throws {ForbiddenException} When user is not authenticated or not enrolled
  * @throws {BadRequestException} When batchId parameter is missing
  */

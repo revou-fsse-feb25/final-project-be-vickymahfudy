@@ -34,11 +34,11 @@ interface RequestWithUser extends Request {
 
 /**
  * Admin Authorization Guard
- * 
+ *
  * This guard extends JwtGuard to provide admin-only access control.
  * It first validates JWT authentication, then checks if the user has ADMIN role.
  * Only users with ADMIN role can access endpoints protected by this guard.
- * 
+ *
  * @example
  * ```typescript
  * @UseGuards(JwtGuard, AdminGuard)
@@ -47,7 +47,7 @@ interface RequestWithUser extends Request {
  *   // Only admins can create users
  * }
  * ```
- * 
+ *
  * @throws {UnauthorizedException} When JWT token is invalid (inherited from JwtGuard)
  * @throws {ForbiddenException} When user role is not ADMIN
  */

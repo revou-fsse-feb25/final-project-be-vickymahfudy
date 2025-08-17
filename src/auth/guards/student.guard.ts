@@ -34,11 +34,11 @@ interface RequestWithUser extends Request {
 
 /**
  * Student Authorization Guard
- * 
+ *
  * This guard extends JwtGuard to provide student-only access control.
  * It first validates JWT authentication, then checks if the user has STUDENT role.
  * Only users with STUDENT role can access endpoints protected by this guard.
- * 
+ *
  * @example
  * ```typescript
  * @UseGuards(JwtGuard, StudentGuard)
@@ -47,7 +47,7 @@ interface RequestWithUser extends Request {
  *   // Only students can enroll in batches
  * }
  * ```
- * 
+ *
  * @throws {UnauthorizedException} When JWT token is invalid (inherited from JwtGuard)
  * @throws {ForbiddenException} When user role is not STUDENT
  */

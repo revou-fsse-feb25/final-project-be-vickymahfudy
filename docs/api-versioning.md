@@ -7,6 +7,7 @@ The Revou LMS API follows semantic versioning principles to ensure backward comp
 ## Current API Version
 
 **Version: 1.0**
+
 - **Status**: Stable and Production-Ready
 - **Release Date**: January 2024
 - **Compatibility**: All endpoints are stable and backward compatible
@@ -32,10 +33,12 @@ The API follows semantic versioning (SemVer) with the format `MAJOR.MINOR.PATCH`
 All endpoints are currently stable and production-ready:
 
 ### Authentication & Authorization
+
 - `POST /auth/login` - User authentication
 - `POST /auth/register` - User registration
 
 ### Educational Structure
+
 - `GET /verticals` - List all educational verticals
 - `GET /batches` - List all student batches
 - `GET /modules` - List all course modules
@@ -43,11 +46,13 @@ All endpoints are currently stable and production-ready:
 - `GET /lectures` - List all lecture sessions
 
 ### Learning & Assessment
+
 - `GET /assignments` - List all assignments
 - `POST /submissions` - Submit assignment solutions
 - `GET /enrollments` - Manage student enrollments
 
 ### Administrative Operations
+
 - All CRUD operations for educational content management
 - User management and role-based access control
 
@@ -75,6 +80,7 @@ All endpoints are currently stable and production-ready:
 **Expected Release**: Q2 2024
 
 **Planned Features**:
+
 - Enhanced search and filtering capabilities
 - Bulk operations for administrative tasks
 - Advanced analytics endpoints
@@ -87,6 +93,7 @@ All endpoints are currently stable and production-ready:
 **Expected Release**: Q4 2024
 
 **Potential Breaking Changes**:
+
 - GraphQL endpoint introduction
 - Enhanced authentication with OAuth2
 - Restructured response formats for better consistency
@@ -105,6 +112,7 @@ All endpoints are currently stable and production-ready:
 ### Deprecation Indicators
 
 #### Swagger Documentation
+
 ```typescript
 @ApiOperation({
   summary: 'Get user profile (DEPRECATED)',
@@ -124,6 +132,7 @@ All endpoints are currently stable and production-ready:
 ```
 
 #### Response Headers
+
 ```http
 X-API-Deprecation-Warning: This endpoint is deprecated and will be removed in v2.0. Use GET /users/profile instead.
 X-API-Deprecation-Date: 2024-06-01
@@ -141,7 +150,7 @@ Clients should implement version checking to ensure compatibility:
 const checkApiCompatibility = async () => {
   const response = await fetch('/api');
   const apiVersion = response.headers.get('X-API-Version');
-  
+
   if (!isCompatibleVersion(apiVersion, '1.0')) {
     console.warn('API version mismatch detected');
     // Handle version incompatibility
@@ -156,9 +165,11 @@ const checkApiCompatibility = async () => {
 const handleApiResponse = (response) => {
   if (response.status === 410) {
     // Endpoint has been removed
-    throw new Error('API endpoint no longer available. Please update your client.');
+    throw new Error(
+      'API endpoint no longer available. Please update your client.',
+    );
   }
-  
+
   const deprecationWarning = response.headers.get('X-API-Deprecation-Warning');
   if (deprecationWarning) {
     console.warn('Deprecation Warning:', deprecationWarning);
@@ -237,6 +248,7 @@ const handleApiResponse = (response) => {
 ### Emergency Support
 
 For critical issues related to API versioning or breaking changes:
+
 - **Emergency Email**: emergency-api@revou.co
 - **Response Time**: Within 4 hours during business hours
 - **Escalation**: Direct line to the API development team

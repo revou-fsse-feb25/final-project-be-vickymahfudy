@@ -29,11 +29,13 @@ JwtGuard (Base Authentication)
 **Location**: `src/auth/guards/jwt.guard.ts`
 
 **Functionality**:
+
 - Extracts Bearer token from Authorization header
 - Verifies token signature and expiration
 - Attaches user information to request object
 
 **Usage**:
+
 ```typescript
 @UseGuards(JwtGuard)
 @Get('profile')
@@ -43,6 +45,7 @@ getProfile(@Request() req) {
 ```
 
 **Throws**:
+
 - `UnauthorizedException`: When token is missing, invalid, or expired
 
 ### 2. AdminGuard
@@ -52,11 +55,13 @@ getProfile(@Request() req) {
 **Location**: `src/auth/guards/admin.guard.ts`
 
 **Functionality**:
+
 - Extends JwtGuard (inherits authentication)
 - Verifies user role is 'ADMIN'
 - Provides admin-only access control
 
 **Usage**:
+
 ```typescript
 @UseGuards(JwtGuard, AdminGuard)
 @Post('users')
@@ -66,6 +71,7 @@ createUser(@Body() userData: CreateUserDto) {
 ```
 
 **Throws**:
+
 - `UnauthorizedException`: When JWT token is invalid (inherited)
 - `ForbiddenException`: When user role is not ADMIN
 
@@ -76,11 +82,13 @@ createUser(@Body() userData: CreateUserDto) {
 **Location**: `src/auth/guards/student.guard.ts`
 
 **Functionality**:
+
 - Extends JwtGuard (inherits authentication)
 - Verifies user role is 'STUDENT'
 - Provides student-only access control
 
 **Usage**:
+
 ```typescript
 @UseGuards(JwtGuard, StudentGuard)
 @Post('enrollments')
@@ -90,6 +98,7 @@ enrollInBatch(@Body() enrollmentData: CreateEnrollmentDto) {
 ```
 
 **Throws**:
+
 - `UnauthorizedException`: When JWT token is invalid (inherited)
 - `ForbiddenException`: When user role is not STUDENT
 
@@ -100,11 +109,13 @@ enrollInBatch(@Body() enrollmentData: CreateEnrollmentDto) {
 **Location**: `src/auth/guards/enrollment.guard.ts`
 
 **Functionality**:
+
 - Checks if user is enrolled in the requested batch
 - Validates batch access permissions
 - Requires batchId parameter in request
 
 **Usage**:
+
 ```typescript
 @UseGuards(JwtGuard, EnrollmentGuard)
 @Get('batch/:batchId/content')
@@ -114,12 +125,14 @@ getBatchContent(@Param('batchId') batchId: string) {
 ```
 
 **Throws**:
+
 - `ForbiddenException`: When user is not authenticated or not enrolled
 - `BadRequestException`: When batchId parameter is missing
 
 ## Common Usage Patterns
 
 ### 1. Public Endpoints
+
 ```typescript
 // No guards - accessible to everyone
 @Post('auth/login')
@@ -129,6 +142,7 @@ login(@Body() loginDto: LoginDto) {
 ```
 
 ### 2. Authenticated Endpoints
+
 ```typescript
 // Requires valid JWT token
 @UseGuards(JwtGuard)
@@ -139,6 +153,7 @@ getProfile(@Request() req) {
 ```
 
 ### 3. Role-Based Access
+
 ```typescript
 // Admin only
 @UseGuards(JwtGuard, AdminGuard)
@@ -156,6 +171,7 @@ getMyEnrollments(@Request() req) {
 ```
 
 ### 4. Enrollment-Based Access
+
 ```typescript
 // Requires enrollment in specific batch
 @UseGuards(JwtGuard, StudentGuard, EnrollmentGuard)
@@ -171,25 +187,28 @@ The JWT payload contains the following information:
 
 ```typescript
 interface JwtPayload {
-  sub: string;      // User ID
-  email: string;    // User email
-  role: string;     // User role (ADMIN, STUDENT, TEAM_LEAD)
-  iat?: number;     // Issued at timestamp
-  exp?: number;     // Expiration timestamp
+  sub: string; // User ID
+  email: string; // User email
+  role: string; // User role (ADMIN, STUDENT, TEAM_LEAD)
+  iat?: number; // Issued at timestamp
+  exp?: number; // Expiration timestamp
 }
 ```
 
 ## Error Handling
 
 ### Authentication Errors
+
 - **401 Unauthorized**: Invalid or missing JWT token
 - **401 Unauthorized**: Expired JWT token
 
 ### Authorization Errors
+
 - **403 Forbidden**: Insufficient role permissions
 - **403 Forbidden**: Not enrolled in required batch
 
 ### Validation Errors
+
 - **400 Bad Request**: Missing required parameters (e.g., batchId)
 
 ## Security Best Practices
@@ -229,13 +248,11 @@ When testing endpoints with guards:
 4. **Test error scenarios** (invalid tokens, wrong roles, etc.)
 
 Example test setup:
+
 ```typescript
 const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
 const headers = { Authorization: token };
 
 // Test authenticated endpoint
-await request(app.getHttpServer())
-  .get('/profile')
-  .set(headers)
-  .expect(200);
+await request(app.getHttpServer()).get('/profile').set(headers).expect(200);
 ```

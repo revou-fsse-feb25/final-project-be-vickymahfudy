@@ -35,11 +35,11 @@ interface RequestWithUser extends Request {
 
 /**
  * JWT Authentication Guard
- * 
+ *
  * This guard validates JWT tokens and ensures users are authenticated.
  * It extracts the Bearer token from the Authorization header, verifies it,
  * and attaches the user information to the request object.
- * 
+ *
  * @example
  * ```typescript
  * @UseGuards(JwtGuard)
@@ -48,7 +48,7 @@ interface RequestWithUser extends Request {
  *   return req.user; // Contains JWT payload
  * }
  * ```
- * 
+ *
  * @throws {UnauthorizedException} When token is missing, invalid, or expired
  */
 @Injectable()
