@@ -7,18 +7,50 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
+/**
+ * JWT payload interface containing user information
+ * @interface JwtPayload
+ */
 interface JwtPayload {
+  /** User ID */
   sub: string;
+  /** User email address */
   email: string;
+  /** User role (ADMIN, STUDENT, TEAM_LEAD) */
   role: string;
+  /** Token issued at timestamp */
   iat?: number;
+  /** Token expiration timestamp */
   exp?: number;
 }
 
+/**
+ * Extended Request interface with authenticated user data
+ * @interface RequestWithUser
+ */
 interface RequestWithUser extends Request {
+  /** Authenticated user information from JWT token */
   user: JwtPayload;
 }
 
+/**
+ * JWT Authentication Guard
+ * 
+ * This guard validates JWT tokens and ensures users are authenticated.
+ * It extracts the Bearer token from the Authorization header, verifies it,
+ * and attaches the user information to the request object.
+ * 
+ * @example
+ * ```typescript
+ * @UseGuards(JwtGuard)
+ * @Get('profile')
+ * getProfile(@Request() req) {
+ *   return req.user; // Contains JWT payload
+ * }
+ * ```
+ * 
+ * @throws {UnauthorizedException} When token is missing, invalid, or expired
+ */
 @Injectable()
 export class JwtGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
